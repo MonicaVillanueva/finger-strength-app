@@ -4,8 +4,8 @@
     "slug": "FingerStrength",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/app/hold.jpg",
-    "scheme": "FingerStrength",
+    "icon": "./assets/images/icon.png",
+    "scheme": "fingerstrength",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -28,7 +28,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/app/fingerboard.jpg",
+          "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
