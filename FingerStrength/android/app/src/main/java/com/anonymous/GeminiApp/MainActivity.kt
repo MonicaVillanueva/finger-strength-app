@@ -1,4 +1,4 @@
-package com.anonymous.GeminiApp
+package com.anonymous.FingerStrength
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

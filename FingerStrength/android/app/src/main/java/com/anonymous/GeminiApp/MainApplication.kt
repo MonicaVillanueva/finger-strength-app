@@ -1,4 +1,4 @@
-package com.anonymous.GeminiApp
+package com.anonymous.FingerStrength
 
 import android.app.Application
 import android.content.res.Configuration

@@ -27,7 +27,7 @@
         "android.permission.BLUETOOTH_SCAN",
         "android.permission.ACCESS_FINE_LOCATION"
       ],
-      "package": "com.anonymous.GeminiApp"
+      "package": "com.anonymous.FingerStrength"
     },
     "web": {
       "output": "static",
@@ -66,7 +66,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "4d318ff2-6b64-439d-a603-39f1f26d1ccd"
+        "projectId": "34993b78-e4a3-4a6a-9d0c-6e1e60970672"
       }
     }
   }
