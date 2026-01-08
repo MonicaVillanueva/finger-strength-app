@@ -1,7 +1,12 @@
+/**
+ * components/DeviceModal.tsx
+ * Brief: Modal UI to list discovered Bluetooth devices and allow selection.
+ * Exports: `DeviceModal` React component. Props: `visible`, `devices`, `onSelectDevice`, `onClose`.
+ */
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 
-import { COLORS } from '../constants/colors';
+import { COLORS } from '@/constants/colors';
 
 interface Device {
   id: string;
@@ -16,6 +21,16 @@ interface DeviceModalProps {
   onClose: () => void;
 }
 
+/**
+ * DeviceModal component
+ * 
+ * A modal component that displays a list of discovered Bluetooth devices and allows the user to select one.
+ * 
+ * @param {boolean} visible - Whether the modal should be visible or not.
+ * @param {Device[]} devices - An array of discovered Bluetooth devices.
+ * @param {(device: any) => void} onSelectDevice - A callback function that is called when the user selects a device.
+ * @param {() => void} onClose - A callback function that is called when the user closes the modal.
+ */
 export const DeviceModal: React.FC<DeviceModalProps> = ({
   visible,
   devices,
@@ -79,13 +94,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   deviceName: { color: COLORS.TEXT_PRIMARY },
-  deviceId: { color: '#777', fontSize: 12 },
+  deviceId: { color: COLORS.TEXT_TERTIARY, fontSize: 12 },
   button: {
     backgroundColor: COLORS.PRIMARY,
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
   },
-  secondaryButton: { backgroundColor: '#444' },
+  secondaryButton: { backgroundColor: COLORS.SECONDARY },
   buttonText: { color: COLORS.TEXT_PRIMARY, fontWeight: 'bold', fontSize: 16 },
 });

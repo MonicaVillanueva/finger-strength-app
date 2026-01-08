@@ -1,3 +1,7 @@
+/**
+ * hooks/use-color-scheme.web.ts
+ * Brief: Web-specific hook that hydrates color-scheme on the client to avoid SSR mismatch.
+ */
 import { useEffect, useState } from 'react';
 import { useColorScheme as useRNColorScheme } from 'react-native';
 

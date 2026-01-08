@@ -1,8 +1,15 @@
+/**
+ * hooks/useBluetooth.ts
+ * Brief: Custom hook encapsulating BLE scanning, connection and lightweight broadcast parsing.
+ * - Exposes: `weight`, `maxPull`, `status`, `connectedDevice`, `devices`, `scanning` and action methods.
+ * 
+ * @todo: Currently mixes scanning, connect and broadcast parsing in a single hook; consider splitting responsibilities.
+ */
 import { useEffect, useState } from 'react';
 import { Platform, PermissionsAndroid, Alert } from 'react-native';
 import * as Device from 'expo-device';
 import { BleManager, Subscription } from 'react-native-ble-plx';
-import { parseWeightData } from '../utils/weightParser';
+import { parseWeightData } from '@/utils/weightParser';
 import { Buffer } from 'buffer';
 
 interface BluetoothDevice {
@@ -13,6 +20,25 @@ interface BluetoothDevice {
 
 const manager = Platform.OS !== 'web' ? new BleManager() : null;
 
+/**
+ * Custom hook encapsulating BLE scanning, connection and lightweight broadcast parsing.
+ *
+ * Exposes: `weight`, `maxPull`, `status`, `connectedDevice`, `devices`, `scanning` and action methods.
+ *
+ * Notes: Currently mixes scanning, connect and broadcast parsing in a single hook; consider splitting responsibilities.
+ *
+ * @returns {Object} An object containing the hook's state and methods.
+ * @property {number} weight - The most recently received weight value.
+ * @property {number} maxPull - The maximum pull force observed on the device.
+ * @property {string} status - The current status of the hook (e.g. 'Disconnected', 'Scanning...').
+ * @property {any} connectedDevice - The currently connected BLE device.
+ * @property {BluetoothDevice[]} devices - The list of discovered BLE devices.
+ * @property {boolean} scanning - Whether the hook is currently scanning for BLE devices.
+ * @property {function} scanAndConnect - Starts scanning for BLE devices and connects to the first device that is discovered.
+ * @property {function} connectToScale - Connect to a BLE device and start listening for its broadcasts to receive weight data.
+ * @property {function} disconnectDevice - Disconnects the connected BLE device, stops any ongoing scan, and resets the UI state.
+ * @property {function} stopScanning - Stop BLE device scanning and cancel any ongoing scan.
+ */
 export const useBluetooth = () => {
   const [weight, setWeight] = useState(0.0);
   const [maxPull, setMaxPull] = useState(1.0);
@@ -34,6 +60,12 @@ export const useBluetooth = () => {
     };
   }, [subscription]);
 
+/**
+ * Request Android permissions for BLE scanning, connection and fine location.
+ * Note that BLE requires location permission on Android (API level < 31).
+ * On iOS, permissions are handled automatically and this function returns true.
+ * @returns {Promise<boolean>} True if all permissions are granted, false otherwise.
+ */
   const requestPermissions = async (): Promise<boolean> => {
     if (Platform.OS === 'android') {
       if ((Device.platformApiLevel ?? -1) < 31) {
@@ -67,6 +99,13 @@ export const useBluetooth = () => {
     }
   };
 
+/**
+ * Scans for nearby BLE devices and connects to the first device that is discovered.
+ * Checks for required permissions before starting the scan.
+ * If no devices are discovered, sets `scanning` to false and `status` to 'Scan Failed'.
+ * If a device is discovered, adds it to the `devices` array and sets `scanning` to false.
+ * If BLE is not available (web), shows an alert to the user.
+ */
   const scanAndConnect = async (): Promise<void> => {
     console.log('Button pressed: Checking permissions...');
     const permission = await requestPermissions();
@@ -102,6 +141,12 @@ export const useBluetooth = () => {
     });
   };
 
+/**
+ * Connect to a BLE device and start listening for its broadcasts to receive weight data.
+ * @param {any} device - The BLE device to connect to.
+ * @returns {Promise<void>} - A promise that resolves when the device is connected and broadcasts are being received.
+ * @throws {Error} - If there was an error connecting to the device or setting up the broadcast listener.
+ */
   const connectToScale = async (device: any): Promise<void> => {
     try {
       setStatus(`Receiving Data from ${device.name || device.id}`);
@@ -144,6 +189,11 @@ export const useBluetooth = () => {
     }
   };
 
+/**
+ * Disconnects the connected BLE device, stops any ongoing scan, and resets the UI state.
+ * @returns {Promise<void>} - A promise that resolves when the device is disconnected.
+ * @throws {Error} - If an error occurs while disconnecting the device.
+ */
   const disconnectDevice = async (): Promise<void> => {
     try {
       try {
@@ -158,6 +208,11 @@ export const useBluetooth = () => {
     }
   };
 
+/**
+ * Stop BLE device scanning and cancel any ongoing scan.
+ * @returns {void} Does not return a value.
+ * @throws {any} If there was an error stopping the device scan.
+ */
   const stopScanning = (): void => {
     try {
       manager?.stopDeviceScan();

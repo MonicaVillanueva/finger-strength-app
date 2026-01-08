@@ -1,3 +1,9 @@
+/**
+ * app/(tabs)/_layout.tsx
+ * Brief: Tab navigator container and layout for the app's main tabbed area.
+ * Exports: layout component that defines tab screens and shared tab UI.
+ */
+
 import { Tabs } from 'expo-router';
 import React from 'react';
 

@@ -1,3 +1,8 @@
+/**
+ * constants/colors.ts
+ * Brief: Central color palette used across the app. Prefer semantic tokens for components.
+ * Exports: `COLORS` object with semantic color names and zone colors.
+ */
 export const COLORS = {
   PRIMARY: '#2196F3',
   SECONDARY: '#444',

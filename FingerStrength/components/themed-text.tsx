@@ -1,3 +1,8 @@
+/**
+ * components/themed-text.tsx
+ * Brief: Text wrapper that applies theme-aware colors via `useThemeColor`.
+ * Exports: `ThemedText` component and `ThemedTextProps` type.
+ */
 import { StyleSheet, Text, type TextProps } from 'react-native';
 
 import { useThemeColor } from '@/hooks/use-theme-color';
@@ -8,6 +13,14 @@ export type ThemedTextProps = TextProps & {
   type?: 'default' | 'title' | 'defaultSemiBold' | 'subtitle' | 'link';
 };
 
+/**
+ * A Text wrapper that applies theme-aware colors via `useThemeColor`.
+ * Props:
+ * - `style`: The style for the Text component.
+ * - `lightColor`: Optional light theme color override.
+ * - `darkColor`: Optional dark theme color override.
+ * - `type`: The type of text to render; one of 'default', 'title', 'defaultSemiBold', 'subtitle', or 'link'.
+ */
 export function ThemedText({
   style,
   lightColor,

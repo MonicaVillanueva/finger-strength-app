@@ -1,6 +1,11 @@
+/**
+ * components/DisplayRing.tsx
+ * Brief: Visual ring component to display current weight, percent of max, and status.
+ * Exports: `DisplayRing` React component. Props: `weight`, `maxPull`, `status`.
+ */
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { COLORS } from '../constants/colors';
+import { COLORS } from '@/constants/colors';
 
 interface DisplayRingProps {
   weight: number;
@@ -8,12 +13,27 @@ interface DisplayRingProps {
   status: string;
 }
 
+/**
+ * Returns a zone color based on the given percentage.
+ * - Green if percentage is less than 50,
+ * - Orange if percentage is less than 85,
+ * - Red otherwise.
+ * @param {number} percentage - Percentage value to determine zone color.
+ * @return {string} - Zone color as a string.
+ */
 const getZoneColor = (percentage: number): string => {
   if (percentage < 50) return COLORS.ZONE_GREEN; // Green
   if (percentage < 85) return COLORS.ZONE_ORANGE; // Orange
   return COLORS.ZONE_RED;// Red
 };
 
+/**
+ * Visual ring component to display current weight, percent of max, and status.
+ *
+ * @param {number} weight - Current weight in kg.
+ * @param {number} maxPull - Maximum weight in kg.
+ * @param {string} status - Current connection status.
+ */
 export const DisplayRing: React.FC<DisplayRingProps> = ({
   weight,
   maxPull,

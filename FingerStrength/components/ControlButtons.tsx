@@ -1,3 +1,8 @@
+/**
+ * components/ControlButtons.tsx
+ * Brief: Renders primary action buttons for connecting, scanning, setting max, and disconnecting.
+ * Exports: `ControlButtons` React component. Props control connection state and handlers.
+ */
 import React from 'react';
 import {
   View,
@@ -7,7 +12,7 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import { COLORS } from '../constants/colors';
+import { COLORS } from '@/constants/colors';
 
 interface ControlButtonsProps {
   connectedDevice: any;

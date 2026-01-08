@@ -1,3 +1,8 @@
+/**
+ * components/hello-wave.tsx
+ * Brief: Small animated emoji component used for friendly UI touches (wave emoji).
+ * Exports: `HelloWave` simple presentational component.
+ */
 import Animated from 'react-native-reanimated';
 
 export function HelloWave() {

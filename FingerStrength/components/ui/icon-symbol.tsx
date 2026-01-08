@@ -1,3 +1,8 @@
+/**
+ * components/ui/icon-symbol.tsx
+ * Brief: Cross-platform icon wrapper — uses SF Symbols on iOS or MaterialIcons as a fallback.
+ * Exports: `IconSymbol` component. Add mappings in `MAPPING` for symbol name fallbacks.
+ */
 // Fallback for using MaterialIcons on Android and web.
 
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
