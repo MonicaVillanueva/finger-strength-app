@@ -5,7 +5,7 @@
  * 
  * @todo: Currently mixes scanning, connect and broadcast parsing in a single hook; consider splitting responsibilities.
  */
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Platform, PermissionsAndroid, Alert } from 'react-native';
 import * as Device from 'expo-device';
 import { BleManager, Subscription } from 'react-native-ble-plx';
@@ -45,6 +45,7 @@ export const useBluetooth = () => {
   const [status, setStatus] = useState('Disconnected');
   const [connectedDevice, setConnectedDevice] = useState<any>(null);
   const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const discoveryRef = useRef(false); // Track wheter discovery scanning should accept results
   const [devices, setDevices] = useState<BluetoothDevice[]>([]);
   const [scanning, setScanning] = useState(false);
 
@@ -121,6 +122,7 @@ export const useBluetooth = () => {
     setDevices([]);
     setScanning(true);
     setStatus('Scanning...');
+    discoveryRef.current = true;
 
     manager.startDeviceScan(null, null, (error, device) => {
       if (error) {
@@ -131,12 +133,30 @@ export const useBluetooth = () => {
       }
 
       if (!device) return;
+      if (!discoveryRef.current) return; // Ignore discoveries after stop
+
+      // Filter out devices without a name
+      if (!device.name && !device.localName) return;
 
       const displayName = device.name || device.localName || device.id;
 
       setDevices((prev) => {
         if (prev.find((d) => d.id === device.id)) return prev;
-        return [...prev, { id: device.id, name: displayName, device }];
+
+        const newList = [...prev, { id: device.id, name: displayName, device }];
+
+        // Promote devices whose name starts with "IF_"
+        newList.sort((a, b) => {
+          const aPriority = /^IF_/i.test(a.name) ? 0 : 1;
+          const bPriority = /^IF_/i.test(b.name) ? 0 : 1;
+          if (aPriority !== bPriority) return aPriority - bPriority;
+
+          // If names are the same, do not change the order
+          return 0;          
+          // return a.name.localeCompare(b.name); // Alphabetical order
+        });
+
+        return newList;
       });
     });
   };
@@ -154,6 +174,7 @@ export const useBluetooth = () => {
       // Clear the device list and mark as connected BEFORE starting new scan
       setDevices([]);
       setScanning(false);
+      discoveryRef.current = false;
       setConnectedDevice(device);
 
       // Restart scan to keep receiving updates from this device's broadcasts
@@ -219,6 +240,8 @@ export const useBluetooth = () => {
     } catch (e) {}
     setScanning(false);
     setStatus('Scan cancelled');
+    setDevices([]);
+    discoveryRef.current = false;
   };
 
   return {
