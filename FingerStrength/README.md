@@ -47,3 +47,15 @@ See the detailed file reference: docs/FILES.md
 - State management: If multiple UI pieces depend on device data, a small global store or React context can avoid prop-drilling and duplicated state.
 - Platform-specific code: Keep platform-specific components small; prefer feature-detection where possible.
 - Tests: Add unit tests for `utils/weightParser.ts` and integration tests for `useBluetooth` using mocks.
+
+# Future Plans
+
+## Development Tests
+[] TODO
+
+## New Features
+[] Add profile information:  Weight, Max effort (date)
+
+## Improvements
+[] Error display when asking for Bluetooth permissions
+[] Max effort persistance
