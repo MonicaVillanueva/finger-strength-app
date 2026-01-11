@@ -13,7 +13,7 @@ app/
 app/(tabs)/
 - `_layout.tsx`: Layout for the tab-based area of the app (tab navigator container).
 - `index.js`: Tab entry or simple route index (JS shim for navigation if needed).
- - `explore.tsx`: Example/demo screen — currently replaced with a minimal stub.
+ - `train.tsx`: Example/demo screen — currently replaced with a minimal stub.
 
 components/
 - `ControlButtons.tsx`: UI for primary interactive buttons (start/stop, etc.).

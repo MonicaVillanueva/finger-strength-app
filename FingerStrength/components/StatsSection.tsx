@@ -1,6 +1,6 @@
 /**
  * components/StatsSection.tsx
- * Brief: Small section that displays current effort percentage and context compared to max pull.
+ * Brief: Small section that displays current load percentage and context compared to max pull.
  * Exports: `StatsSection` component. Props: `weight`, `maxPull`.
  */
 import React from 'react';
@@ -14,7 +14,7 @@ interface StatsSectionProps {
 }
 
 /**
- * Displays a small section with the current effort percentage and context compared to max pull.
+ * Displays a small section with the current load percentage and context compared to max pull.
  * 
  * @param {number} weight - Current weight in kg.
  * @param {number} maxPull - Maximum weight in kg.

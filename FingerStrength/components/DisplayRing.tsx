@@ -45,7 +45,7 @@ export const DisplayRing: React.FC<DisplayRingProps> = ({
   return (
     <>
       <View style={styles.header}>
-        <Text style={styles.title}>ClimbTracker</Text>
+        <Text style={styles.title}>FingerStrenth</Text>
         <Text style={styles.status}>{status}</Text>
       </View>
 
@@ -57,7 +57,7 @@ export const DisplayRing: React.FC<DisplayRingProps> = ({
       </View>
 
       <View style={styles.statsContainer}>
-        <Text style={styles.statLabel}>Current Effort</Text>
+        <Text style={styles.statLabel}>Current Load</Text>
         <Text style={[styles.percentageText, { color: zoneColor }]}>
           {percentage.toFixed(0)}%
         </Text>
