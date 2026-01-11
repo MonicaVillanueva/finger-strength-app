@@ -54,7 +54,7 @@ See the detailed file reference: docs/FILES.md
 [] TODO
 
 ## New Features
-[] Add profile information:  Weight, Max effort (date)
+🛠️ Add profile information:  Weight, Max effort (date)
 
 ## Improvements
 [] Error display when asking for Bluetooth permissions
