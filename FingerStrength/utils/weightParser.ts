@@ -36,9 +36,14 @@ export const parseWeightData = (manufacturerData: string | null): number => {
   if (!manufacturerData) return 0;
 
   try {
-    const hexData = base64ToHex(manufacturerData);
-    const weightHex = hexData.substring(24, 28);
-    return parseInt(weightHex, 16) / 100;
+    // Work directly with Buffer to avoid creating intermediate strings/arrays.
+    const buf = Buffer.from(manufacturerData, 'base64');
+    // Ensure we have at least 14 bytes (we read 2 bytes starting at offset 12)
+    if (buf.length >= 14) {
+      const raw = buf.readUInt16BE(12);
+      return raw / 100;
+    }
+    return 0;
   } catch (error) {
     console.error('Error parsing weight data:', error);
     return 0;

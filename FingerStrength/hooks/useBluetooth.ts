@@ -11,6 +11,7 @@ import * as Device from 'expo-device';
 import { BleManager, Subscription } from 'react-native-ble-plx';
 import { parseWeightData } from '@/utils/weightParser';
 import { Buffer } from 'buffer';
+import { connected } from 'process';
 
 interface BluetoothDevice {
   id: string;
@@ -42,12 +43,44 @@ const manager = Platform.OS !== 'web' ? new BleManager() : null;
 export const useBluetooth = () => {
   const [weight, setWeight] = useState(0.0);
   const [maxPull, setMaxPull] = useState(1.0);
-  const [status, setStatus] = useState('Disconnected');
+  //const [status, setStatus] = useState('Disconnected');
+  const statusMap: Record<string, { label: string; color: string }> = {
+    disconnected: { label: '🔴 Not connected', color: '#d9534f' },
+    scanning: { label: '🔎 Scanning...', color: '#007bff' },    
+    connected: { label: '🟢 Connected to {}', color: '#5cb85c' },
+    scan_failed: { label: '⚠️ Scan Failed', color: '#d9534f' },
+    unknown_data: { label: '🚫 Unknown Data', color: '#d9534f' },
+
+
+    //connecting: { label: '🟡 Connecting…', color: '#f0ad4e' },
+    //training: { label: '🔵 Training in progress', color: '#007bff' },
+    //'scan cancelled': { label: 'ℹ️ Scan cancelled', color: '#6c757d' },
+  };
+  const [status, setStatus] = useState<{ label: string }>(
+    statusMap.disconnected
+  );
+
   const [connectedDevice, setConnectedDevice] = useState<any>(null);
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const discoveryRef = useRef(false); // Track wheter discovery scanning should accept results
+  const lastUpdateRef = useRef<number>(0);
+  const lastLogRef = useRef<number>(0);
+  const lastHrRef = useRef<number | null>(null);
+  const minUpdateIntervalRef = useRef<number>(50); // ms - limit state updates to 20Hz by default
+  const weightRef = useRef<number>(0);
   const [devices, setDevices] = useState<BluetoothDevice[]>([]);
   const [scanning, setScanning] = useState(false);
+
+  const updateStatus = (keyOrLabel: string, name?: string) => {
+    const key = (keyOrLabel || '').toLowerCase();
+    if (statusMap[key]) {
+      setStatus(statusMap[key]);
+    }
+    if (name) {
+      setStatus({ label: statusMap[key].label.replace('{}', name) });
+    }
+  };
+
 
   // Cleanup on unmount
   useEffect(() => {
@@ -121,14 +154,14 @@ export const useBluetooth = () => {
 
     setDevices([]);
     setScanning(true);
-    setStatus('Scanning...');
+    updateStatus('scanning');
     discoveryRef.current = true;
 
     manager.startDeviceScan(null, null, (error, device) => {
       if (error) {
         console.log('SCAN ERROR:', error.message);
         setScanning(false);
-        setStatus('Scan Failed');
+        updateStatus('scan_failed');
         return;
       }
 
@@ -169,7 +202,7 @@ export const useBluetooth = () => {
  */
   const connectToScale = async (device: any): Promise<void> => {
     try {
-      setStatus(`Receiving Data from ${device.name || device.id}`);
+      updateStatus('connected', device.name || device.id)
 
       // Clear the device list and mark as connected BEFORE starting new scan
       setDevices([]);
@@ -192,12 +225,26 @@ export const useBluetooth = () => {
         // Extract weight from manufacturer data or advertisement data
         if (scannedDevice.manufacturerData) {
           try {
-            const data = Buffer.from(scannedDevice.manufacturerData, 'base64');
-            console.log('Received broadcast data:', data);
+            const wallNow = Date.now();
+            const perf = (global as any).performance;
+            const hrNow = perf && typeof perf.now === 'function' ? perf.now() : Date.now();
+
+            // precise delta in milliseconds between packets
+            const delta = lastHrRef.current != null ? hrNow - lastHrRef.current : 0;
+            lastHrRef.current = hrNow;
 
             const weightValue = parseWeightData(scannedDevice.manufacturerData);
             if (!isNaN(weightValue)) {
-              setWeight(weightValue);
+              // Log ISO timestamp plus high-resolution delta (ms)
+              console.log('Received broadcast at', new Date(wallNow).toISOString(), 'delta_ms:', delta.toFixed(3));
+
+              // Throttle UI updates to avoid flooding React renders
+              const since = wallNow - lastUpdateRef.current;
+              if (since >= minUpdateIntervalRef.current || weightValue !== weightRef.current) {
+                setWeight(weightValue);
+                weightRef.current = weightValue;
+                lastUpdateRef.current = wallNow;
+              }
             }
           } catch (e: any) {
             console.log('Error parsing broadcast data:', e.message);
@@ -206,7 +253,7 @@ export const useBluetooth = () => {
       });
     } catch (e: any) {
       console.log('Error setting up broadcast listener:', e.message);
-      setStatus('Setup Failed');
+      updateStatus('unknown_data');
     }
   };
 
@@ -223,7 +270,7 @@ export const useBluetooth = () => {
 
       setConnectedDevice(null);
       setWeight(0.0);
-      setStatus('Disconnected');
+      updateStatus('disconnected');
     } catch (e: any) {
       console.log('Error disconnecting:', e.message);
     }
@@ -239,7 +286,7 @@ export const useBluetooth = () => {
       manager?.stopDeviceScan();
     } catch (e) {}
     setScanning(false);
-    setStatus('Scan cancelled');
+    updateStatus('disconnected');
     setDevices([]);
     discoveryRef.current = false;
   };
@@ -248,7 +295,7 @@ export const useBluetooth = () => {
     weight,
     maxPull,
     setMaxPull,
-    status,
+    status: status.label,
     connectedDevice,
     devices,
     scanning,
@@ -256,5 +303,6 @@ export const useBluetooth = () => {
     connectToScale,
     disconnectDevice,
     stopScanning,
+    updateStatus
   };
 };
