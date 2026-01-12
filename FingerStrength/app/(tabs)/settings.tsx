@@ -176,8 +176,8 @@ function SettingsContent() {
             <Text style={styles.infoLabel}>Body weight</Text>
             <Text style={styles.infoValue}>{activeUser?.bodyWeightKg != null ? `${activeUser.bodyWeightKg} kg` : ''}</Text>
 
-            <Text style={[styles.infoLabel, { marginTop: 8 }]}>Max pull</Text>
-            <Text style={styles.infoValue}>{activeUser?.maxPull != null ? `${activeUser.maxPull} kg` : ''}</Text>
+            <Text style={styles.infoLabel}>Max pull</Text>
+            <Text style={styles.infoValue}>{activeUser?.maxPull != null ? `${activeUser.maxPull} kg - ${activeUser.maxPullDate}` : ''}</Text>            
           </View>
 
           <View style={{ flex: 1 }} />
