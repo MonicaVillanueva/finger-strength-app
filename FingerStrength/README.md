@@ -51,11 +51,11 @@ See the detailed file reference: docs/FILES.md
 # Future Plans
 
 ## Development Tests
-[] TODO
+- [ ] TODO
 
 ## New Features
-[] Add profile information:  Weight, Max effort (date)
+- [ ] Add profile information:  Weight, Max effort (date)
 
 ## Improvements
-[] Error display when asking for Bluetooth permissions
-[] Max effort persistance
+- [ ] Error display when asking for Bluetooth permissions
+- [ ] Max effort persistance
