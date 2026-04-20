@@ -49,8 +49,8 @@ export const StatsSection: React.FC<StatsSectionProps> = ({
 };
 
 const styles = StyleSheet.create({
-  statsContainer: { alignItems: 'center', marginVertical: 20 },
-  statLabel: { color: COLORS.TEXT_ACCENT, fontSize: 16 },
-  percentageText: { fontSize: 48, fontWeight: 'bold' },
-  subText: { color: COLORS.TEXT_MUTED },
+  statsContainer: { alignItems: 'center', marginVertical: 10 },
+  statLabel: { color: COLORS.TEXT_ACCENT, fontSize: 14 },
+  percentageText: { fontSize: 40, fontWeight: 'bold' },
+  subText: { color: COLORS.TEXT_MUTED, fontSize: 13 },
 });

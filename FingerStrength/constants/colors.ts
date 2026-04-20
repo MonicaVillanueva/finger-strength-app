@@ -14,6 +14,7 @@ export const COLORS = {
   TEXT_TERTIARY: '#777',
   TEXT_MUTED: '#666',
   TEXT_ACCENT: '#AAA',
+  SHADOW: '#000',
 
   // Zone colors for effort
   ZONE_GREEN: '#4CAF50', // <50%

@@ -2,9 +2,9 @@
  * app/(tabs)/settings.tsx
  * Settings screen with top dropdown, info card and edit/delete controls for the selected user.
  */
-import React, { useMemo, useState, useRef } from 'react';
-import { View, Text, FlatList, TouchableOpacity, Modal, TextInput, Button, StyleSheet, ActivityIndicator } from 'react-native';
-import { UserProvider, useUserContext } from '@/contexts/UserContext';
+import React, { useState, useRef } from 'react';
+import { View, Text, FlatList, TouchableOpacity, Modal, TextInput, StyleSheet, ActivityIndicator } from 'react-native';
+import { useUserContext } from '@/contexts/UserContext';
 import { COLORS } from '@/constants/colors';
 
 /**
@@ -125,7 +125,7 @@ function SettingsContent() {
                       try {
                         btnRef.current.measureLayout(
                           containerRef.current,
-                          (x: number, y: number, _width: number, height: number) => setButtonLayout({ x, y, height }),
+                          (x: number, y: number, width: number, height: number) => setButtonLayout({ x, y, width, height }),
                           () => {}
                         );
                       } catch (e) {}
@@ -134,7 +134,9 @@ function SettingsContent() {
                 }
               }}
             >
-              <Text style={styles.userName}>{activeUser ? activeUser.name : 'No user selected'}</Text>
+              <Text style={styles.userName} numberOfLines={1}>
+                {activeUser ? activeUser.name : 'No user selected'}
+              </Text>
               <Text style={styles.chev}>▾</Text>
             </TouchableOpacity>
 
@@ -156,9 +158,10 @@ function SettingsContent() {
                 style={[
                   styles.dropdownList,
                   {
-                    top: (buttonLayout?.y ?? 0) + (buttonLayout?.height ?? 40) + 8,
+                    top: (buttonLayout?.y ?? 0) + (buttonLayout?.height ?? 48) + 8,
                     left: buttonLayout?.x ?? 0,
-                    width: buttonLayout?.width ?? '100%',
+                    width: buttonLayout?.width ?? 'auto',
+                    minWidth: 150,
                   },
                 ]}
               >
@@ -167,6 +170,11 @@ function SettingsContent() {
                   keyExtractor={(i) => i.id}
                   renderItem={renderPickerItem}
                   ItemSeparatorComponent={() => <View style={{ height: 1, backgroundColor: COLORS.SECONDARY }} />}
+                  ListEmptyComponent={() => (
+                    <View style={styles.emptyContainer}>
+                      <Text style={styles.emptyText}>No users found.</Text>
+                    </View>
+                  )}
                 />
               </View>
             </>
@@ -210,18 +218,18 @@ function SettingsContent() {
   );
 }
 
+
+
 /**
- * The main settings screen for the app.
- * It wraps the SettingsContent component in a UserProvider with a unique key.
- * The key is generated randomly using Math.random().toString(36).slice(2).
- * This ensures that the UserProvider instance is recreated whenever the component is re-rendered.
- */
+ * The settings screen.
+ * 
+ * The screen component for the Settings tab
+ * 
+ * @returns {JSX.Element} The rendered settings screen.
+*/
 export default function SettingsScreen() {
-  const providerKey = useMemo(() => Math.random().toString(36).slice(2), []);
   return (
-    <UserProvider key={providerKey}>
-      <SettingsContent />
-    </UserProvider>
+    <SettingsContent />
   );
 }
 
@@ -245,9 +253,23 @@ const styles = StyleSheet.create({
   buttonText: { color: COLORS.TEXT_PRIMARY, fontWeight: 'bold', fontSize: 16 },
 
   topRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
-  overlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 1, backgroundColor: 'transparent' },
-  dropdownList: { position: 'absolute', backgroundColor: COLORS.SURFACE, borderWidth: 1, borderColor: COLORS.SECONDARY, borderRadius: 6, maxHeight: 220, zIndex: 2 },
-  dropdown: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 12, borderWidth: 1, borderColor: COLORS.SECONDARY, borderRadius: 6, backgroundColor: COLORS.SURFACE },
+  overlay: { position: 'absolute', top: -500, left: -500, right: -500, bottom: -1000, zIndex: 1, backgroundColor: 'transparent' },
+  dropdownList: { 
+    position: 'absolute', 
+    backgroundColor: COLORS.SURFACE, 
+    borderWidth: 1, 
+    borderColor: COLORS.SECONDARY, 
+    borderRadius: 6, 
+    maxHeight: 220, 
+    zIndex: 1000,
+    elevation: 5,
+    shadowColor: COLORS.SHADOW,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    overflow: 'hidden',
+  },
+  dropdown: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: 12, borderWidth: 1, borderColor: COLORS.SECONDARY, borderRadius: 6, backgroundColor: COLORS.SURFACE, minHeight: 48 },
   chev: { color: COLORS.TEXT_ACCENT, marginLeft: 8 },
 
   actions: { flexDirection: 'row', alignItems: 'center', marginLeft: 12 },
@@ -261,5 +283,7 @@ const styles = StyleSheet.create({
   modalInputText: { color: COLORS.TEXT_PRIMARY, borderWidth: 1, borderColor: COLORS.SECONDARY, padding: 8, marginBottom: 8, borderRadius: 4 },
 
   pickerItem: { padding: 12 },
-  userName: { color: COLORS.TEXT_PRIMARY, fontSize: 16 }
+  userName: { color: COLORS.TEXT_PRIMARY, fontSize: 16 },
+  emptyContainer: { padding: 15, alignItems: 'center' },
+  emptyText: { color: COLORS.TEXT_SECONDARY, fontSize: 14 },
 });  
