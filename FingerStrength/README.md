@@ -51,7 +51,8 @@ See the detailed file reference: docs/FILES.md
 # Future Plans
 
 ## Development Tests
-- [ ] TODO
+- [x] Jest
+- [x] CI/CD
 
 ## New Features
 [x] Add profile information: Weight, Max effort 
