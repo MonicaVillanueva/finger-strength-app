@@ -54,7 +54,11 @@ See the detailed file reference: docs/FILES.md
 - [ ] TODO
 
 ## New Features
-- [ ] Add profile information:  Weight, Max effort (date)
+[x] Add profile information: Weight, Max effort 
+    [x] Add date to max effort
+    [x] Add profile to Home screen
+    🪲 Make users have unique names
+    [ ] Implement "Guest" user
 
 ## Improvements
 - [ ] Error display when asking for Bluetooth permissions

@@ -10,7 +10,6 @@ import { COLORS } from '@/constants/colors';
 interface DisplayRingProps {
   weight: number;
   maxPull: number;
-  status: string;
 }
 
 /**
@@ -37,54 +36,31 @@ const getZoneColor = (percentage: number): string => {
 export const DisplayRing: React.FC<DisplayRingProps> = ({
   weight,
   maxPull,
-  status,
 }) => {
   const percentage = Math.min((weight / maxPull) * 100, 100);
   const zoneColor = getZoneColor(percentage);
 
   return (
-    <>
-      <View style={styles.header}>
-        <Text style={styles.title}>FingerStrenth</Text>
-        <Text style={styles.status}>{status}</Text>
+    <View style={styles.ringContainer}>
+      <View style={[styles.ring, { borderColor: zoneColor }]}>
+        <Text style={styles.weightText}>{weight.toFixed(2)}</Text>
+        <Text style={styles.unitText}>kg</Text>
       </View>
-
-      <View style={styles.ringContainer}>
-        <View style={[styles.ring, { borderColor: zoneColor }]}>
-          <Text style={styles.weightText}>{weight.toFixed(2)}</Text>
-          <Text style={styles.unitText}>kg</Text>
-        </View>
-      </View>
-
-      <View style={styles.statsContainer}>
-        <Text style={styles.statLabel}>Current Load</Text>
-        <Text style={[styles.percentageText, { color: zoneColor }]}>
-          {percentage.toFixed(0)}%
-        </Text>
-        <Text style={styles.subText}>of {maxPull.toFixed(1)}kg Max</Text>
-      </View>
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  header: { alignItems: 'center', marginBottom: 40 },
-  title: { fontSize: 24, fontWeight: 'bold', color: COLORS.TEXT_PRIMARY },
-  status: { color: COLORS.TEXT_SECONDARY, marginTop: 5 },
-  ringContainer: { alignItems: 'center', justifyContent: 'center', marginVertical: 20 },
+  ringContainer: { alignItems: 'center', justifyContent: 'center', marginVertical: 15 },
   ring: {
-    width: 250,
-    height: 250,
-    borderRadius: 125,
-    borderWidth: 15,
+    width: 220,
+    height: 220,
+    borderRadius: 110,
+    borderWidth: 12,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: COLORS.SURFACE,
   },
-  weightText: { fontSize: 60, fontWeight: 'bold', color: COLORS.TEXT_PRIMARY },
-  unitText: { fontSize: 20, color: COLORS.TEXT_SECONDARY },
-  statsContainer: { alignItems: 'center', marginVertical: 20 },
-  statLabel: { color: COLORS.TEXT_ACCENT, fontSize: 16 },
-  percentageText: { fontSize: 48, fontWeight: 'bold' },
-  subText: { color: COLORS.TEXT_MUTED },
+  weightText: { fontSize: 50, fontWeight: 'bold', color: COLORS.TEXT_PRIMARY },
+  unitText: { fontSize: 18, color: COLORS.TEXT_SECONDARY },
 });

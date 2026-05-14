@@ -19,17 +19,16 @@ interface ControlButtonsProps {
   scanning: boolean;
   weight: number;
   onConnectPress: () => void;
-  onSetMaxPress: () => void;
   onDisconnectPress: () => void;
   onCancelScan: () => void;
 }
+
 
 export const ControlButtons: React.FC<ControlButtonsProps> = ({
   connectedDevice,
   scanning,
   weight,
   onConnectPress,
-  onSetMaxPress,
   onDisconnectPress,
   onCancelScan,
 }) => {
@@ -61,9 +60,6 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
         </>
       ) : (
         <>
-          <TouchableOpacity style={styles.button} onPress={onSetMaxPress}>
-            <Text style={styles.buttonText}>Set Current as MVC</Text>
-          </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, styles.secondaryButton]}
             onPress={onDisconnectPress}
@@ -75,6 +71,7 @@ export const ControlButtons: React.FC<ControlButtonsProps> = ({
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   controls: { marginTop: 'auto', gap: 10 },
