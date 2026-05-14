@@ -16,5 +16,5 @@ jobs:
       - name: Run Tests
         run: |
           cd FingerStrength
-          npm install 
+          npm install --legacy-peer-deps
           npm test
