@@ -51,7 +51,7 @@ See the detailed file reference: docs/FILES.md
 # Future Plans
 
 ## Development Tests
-[] TODO
+- [ ] TODO
 
 ## New Features
 [x] Add profile information: Weight, Max effort 
@@ -61,5 +61,5 @@ See the detailed file reference: docs/FILES.md
     [ ] Implement "Guest" user
 
 ## Improvements
-[] Error display when asking for Bluetooth permissions
-[] Max effort persistance
+- [ ] Error display when asking for Bluetooth permissions
+- [ ] Max effort persistance
